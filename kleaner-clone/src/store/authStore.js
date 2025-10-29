@@ -1,0 +1,102 @@
+import { create } from "zustand";
+//import { useCart } from "../context/useContext";
+
+const API_URL = "http://localhost:3000/api/auth/";
+//const dispatch = { useCart };
+
+export const useAuthStore = create((set) => ({
+  user: null,
+  isAuthenticated: false,
+  error: null,
+  isLoading: false,
+  isCheckingAuth: false,
+  login: async (email, password) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      set({ user: data.user, isAuthenticated: true, isLoading: false });
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+  logout: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      console.log(response);
+      set({ user: null, isAuthenticated: false, isLoading: false });
+    } catch (error) {
+      set({ error: error.message });
+      throw error;
+    }
+  },
+  signup: async (email, password, name) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "signup", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, name }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      console.log(data);
+      set({
+        user: data.user,
+        isLoading: false,
+        isAuthenticated: true,
+        error: null,
+      });
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+  checkAuth: async () => {
+    set({ isCheckingAuth: true, error: null });
+    try {
+      const response = await fetch(API_URL + "check-auth", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await response.json();
+      console.log(data);
+      //if (!response.ok) throw new Error(data.message);
+      set({
+        user: data.user,
+        //isAuthenticated: true,
+        isCheckingAuth: false,
+        error: null,
+      });
+      if (response.ok) set({ isAuthenticated: true });
+    } catch (error) {
+      set({
+        error: error.message,
+        isCheckingAuth: false,
+        isAuthenticated: false,
+      });
+      throw error;
+    } finally {
+      set({
+        isLoading: false,
+        isCheckingAuth: false,
+      });
+    }
+  },
+}));
