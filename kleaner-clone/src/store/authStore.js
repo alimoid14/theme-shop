@@ -1,7 +1,10 @@
 import { create } from "zustand";
 //import { useCart } from "../context/useContext";
 
-const API_URL = "http://localhost:3000/api/auth/";
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/api/auth/"
+    : "/api/auth/";
 //const dispatch = { useCart };
 
 export const useAuthStore = create((set) => ({

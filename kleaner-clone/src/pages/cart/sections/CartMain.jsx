@@ -10,7 +10,10 @@ function CartMain() {
   const { state, totalCost, dispatch } = useCart();
   const list = state.items;
   const navigate = useNavigate();
-  const API_URL = "http://localhost:3000/api/payment/";
+  const API_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api/payment/"
+      : "/api/payment/";
   // const handleSubmit = () => {
   //   const success = Math.random() > 0.5;
   //   if (success) {

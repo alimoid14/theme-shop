@@ -2,7 +2,10 @@ import { useEffect, useReducer } from "react";
 import { CartContext } from "./cartContext";
 import { useAuthStore } from "../store/authStore";
 
-const API_URL = "http://localhost:3000/api/cart/";
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/api/cart/"
+    : "/api/cart/";
 
 const cartReducer = (state, action) => {
   switch (action.type) {
