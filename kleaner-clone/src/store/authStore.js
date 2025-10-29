@@ -39,7 +39,7 @@ export const useAuthStore = create((set) => ({
         method: "POST",
         credentials: "include",
       });
-      console.log(response);
+      //console.log(response);
       set({ user: null, isAuthenticated: false, isLoading: false });
     } catch (error) {
       set({ error: error.message });
@@ -59,7 +59,7 @@ export const useAuthStore = create((set) => ({
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message);
-      console.log(data);
+      //console.log(data);
       set({
         user: data.user,
         isLoading: false,
@@ -79,7 +79,7 @@ export const useAuthStore = create((set) => ({
         credentials: "include",
       });
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       //if (!response.ok) throw new Error(data.message);
       set({
         user: data.user,

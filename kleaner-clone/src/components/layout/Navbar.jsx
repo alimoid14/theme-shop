@@ -35,11 +35,11 @@ function Navbar() {
           <Link to="/cart" className="py-2 sm:text-[1.25rem] sm:py-1">
             Cart
           </Link>
-          {isAuthenticated && (
-            <Link to="/profile" className="py-2 sm:text-[1.25rem] sm:py-1">
-              Profile
-            </Link>
-          )}
+          {/* {isAuthenticated && (
+            <div className="py-2 sm:text-[1.25rem] sm:py-1 bg-white rounded-full text-slate-900 px-4">
+              
+            </div>
+          )} */}
         </div>
         <div className="flex flex-row gap-4">
           <button

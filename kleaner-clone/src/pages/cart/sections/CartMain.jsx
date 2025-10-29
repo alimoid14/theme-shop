@@ -50,7 +50,7 @@ function CartMain() {
 
       // Razorpay calls this handler on successful payment
       handler: async function (response) {
-        console.log("Payment successful:", response);
+        //console.log("Payment successful:", response);
 
         try {
           // 🔹 Verify payment with your backend manually
@@ -70,7 +70,7 @@ function CartMain() {
           if (result.success) {
             alert("Payment successful!");
             // Navigate to success page (React Router)
-            navigate(`/success?reference=${result.reference}`, {
+            navigate(`/success?reference=${response.razorpay_payment_id}`, {
               replace: true,
             });
             dispatch({ type: "CLEAR_CART" });
