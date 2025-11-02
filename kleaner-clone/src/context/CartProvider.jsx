@@ -107,8 +107,8 @@ export const CartProvider = ({ children }) => {
 
   // ✅ Sync cart to backend or localStorage
   useEffect(() => {
+    if (isCheckingAuth || !isCartInitialized) return;
     const syncCart = async () => {
-      if (isCheckingAuth || !isCartInitialized) return;
       if (isAuthenticated) {
         try {
           await fetch(API_URL, {
