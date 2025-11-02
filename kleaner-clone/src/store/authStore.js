@@ -39,7 +39,8 @@ export const useAuthStore = create((set) => ({
         method: "POST",
         credentials: "include",
       });
-      //console.log(response);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
       set({ user: null, isAuthenticated: false, isLoading: false });
     } catch (error) {
       set({ error: error.message });
@@ -100,6 +101,26 @@ export const useAuthStore = create((set) => ({
         isLoading: false,
         isCheckingAuth: false,
       });
+    }
+  },
+  verifyEmail: async (otp) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "verify", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ otp }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      //console.log(data);
+      set({ user: data.user, isLoading: false, error: null });
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
     }
   },
 }));

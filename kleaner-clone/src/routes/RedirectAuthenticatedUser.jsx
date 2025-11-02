@@ -4,7 +4,7 @@ const RedirectAuthenticatedUser = ({ children }) => {
   const { isAuthenticated, user, isLoading, isCheckingAuth } = useAuthStore();
 
   if (isAuthenticated && user) {
-    return <Navigate to="/profile" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (isLoading || isCheckingAuth) return null;

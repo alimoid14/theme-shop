@@ -14,11 +14,26 @@ import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
 import PaymentSuccess from "./pages/success/PaymentSuccess";
 import { Navigate } from "react-router-dom";
+import Verify from "./pages/verify/Verify";
+import { ImSpinner3 } from "react-icons/im";
 function App() {
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, user, isCheckingAuth } = useAuthStore();
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+  window.onload = () => {
+    console.log(user);
+  };
+
+  if (isCheckingAuth)
+    return (
+      <section className="w-full h-full flex justify-center items-center">
+        <div className="w-12 h-12 text-black">
+          <ImSpinner3 className="animate-spin" />
+        </div>
+      </section>
+    );
+
   return (
     <CartProvider>
       <BrowserRouter>
@@ -46,6 +61,9 @@ function App() {
                 </RedirectAuthenticatedUser>
               }
             />
+
+            <Route path="/verify" element={<Verify />} />
+
             <Route path="/*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

@@ -23,15 +23,16 @@ function Signup() {
     setName("");
   };
   return (
-    <section className="h-[calc(100vh-56px)] flex justify-center items-center bg-gradient-to-br from-gray-800 via-blue-800 to-gray-800">
-      <div className="rounded-2xl">
+    <section className="h-[calc(100vh-56px)] flex justify-center items-center bg-gray-200 text-gray-700">
+      <div className="rounded-2xl absolute bg-white/70 z-10">
+        <div className="absolute w-full h-full border-2 border-dashed border-green-700 left-2 bottom-2 rounded-2xl -z-10"></div>
         <div className="flex flex-row">
-          <div className="flex-1 bg-gray-900/10 rounded-t-2xl"></div>
-          <h2 className="ml-auto w-fit text-white text-2xl px-4 pb-2 bg-transparent">
+          <div className="flex-1 bg-white/70 rounded-t-2xl"></div>
+          <h2 className="ml-auto w-fit text-gray-700 text-2xl px-4 pb-2 bg-gray-200">
             SignUp here!
           </h2>
         </div>
-        <div className="w-[300px] p-4 sm:w-[400px] bg-gray-900/10 text-white sm:p-8 pt-0 sm:pt-0 font-bold rounded-b-2xl rounded-r-2xl">
+        <div className="w-[300px] p-4 sm:w-[400px] bg-white/70 text-gray-700 sm:p-8 pt-0 sm:pt-0 font-bold rounded-b-2xl rounded-r-2xl">
           {/* {
           <p>
             isAuthenticated: {isAuthenticated} user: {JSON.stringify(user)}
@@ -44,7 +45,7 @@ function Signup() {
             <input
               type="text"
               placeholder="Name"
-              className="bg-blue-900 p-2 rounded-xl"
+              className="p-2 rounded-xl border border-gray-300"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -52,7 +53,7 @@ function Signup() {
             <input
               type="email"
               placeholder="Email"
-              className="bg-blue-900 p-2 rounded-xl"
+              className="p-2 rounded-xl border border-gray-300"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -60,12 +61,12 @@ function Signup() {
             <input
               type="password"
               placeholder="Password"
-              className="bg-blue-900 p-2 rounded-xl"
+              className="p-2 rounded-xl border border-gray-300"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
-              className="block mx-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              className="block mx-auto text-green-700 bg-green-200 border-2 border-green-600 hover:bg-green-700 hover:text-white font-bold py-2 px-4 w-full rounded-full"
               onClick={handleClick}
               disabled={isLoading}
             >

@@ -43,10 +43,10 @@ const userSchema = new mongoose.Schema(
       type: [cartItemSchema], // array of cart items
       default: [],
     },
-    // isVerified: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
     // resetPasswordToken: String,
     // resetPasswordExpiresAt: Date,
     verificationToken: String,

@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { CartContext } from "./cartContext";
 import { useAuthStore } from "../store/authStore";
 
@@ -63,6 +63,7 @@ export const CartProvider = ({ children }) => {
   const { isAuthenticated, isCheckingAuth } = useAuthStore();
   const storedState = JSON.parse(localStorage.getItem("cart")) || { items: [] };
   const [state, dispatch] = useReducer(cartReducer, storedState);
+  const [isCartInitialized, setIsCartInitialized] = useState(false);
 
   // ✅ Load correct cart on login/logout
   useEffect(() => {
@@ -96,6 +97,8 @@ export const CartProvider = ({ children }) => {
         }
       } catch (err) {
         console.error("Error loading cart:", err);
+      } finally {
+        setIsCartInitialized(true);
       }
     };
 
@@ -105,7 +108,7 @@ export const CartProvider = ({ children }) => {
   // ✅ Sync cart to backend or localStorage
   useEffect(() => {
     const syncCart = async () => {
-      if (isCheckingAuth) return;
+      if (isCheckingAuth || !isCartInitialized) return;
       if (isAuthenticated) {
         try {
           await fetch(API_URL, {
@@ -122,7 +125,7 @@ export const CartProvider = ({ children }) => {
       }
     };
     syncCart();
-  }, [state, isAuthenticated, isCheckingAuth]);
+  }, [state, isAuthenticated, isCheckingAuth, isCartInitialized]);
 
   const totalCost = state.items.reduce(
     (sum, item) => sum + item.price * item.count,
