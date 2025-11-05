@@ -12,6 +12,7 @@ function ForgotPassword() {
       await forgotPassword(email);
       setEmail("");
       setLinkSent(true);
+      alert("Link sent to your email");
     } catch (error) {
       console.log(error);
     }

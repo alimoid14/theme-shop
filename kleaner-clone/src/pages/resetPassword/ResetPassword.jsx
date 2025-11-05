@@ -21,9 +21,8 @@ function ForgotPassword() {
       setPassword("");
       setReenterPass("");
       setResetSuccess(true);
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      alert("Password reset successfully!");
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
