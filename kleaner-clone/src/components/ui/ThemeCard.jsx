@@ -134,7 +134,7 @@ function ThemeCard({
             }`}
           >
             <button
-              className="p-2 border-[1px] border-red-500 text-red-500 hover:text-white hover:bg-red-500"
+              className="px-2 rounded-full bg-red-300 hover:bg-red-500"
               onClick={() => {
                 dispatch({
                   type: "DECREMENT",
@@ -145,14 +145,14 @@ function ThemeCard({
             >
               -
             </button>
-            <span className="text-xl">
+            <span className="text-[1rem]">
               Qty:
               {state.items.find((item) => item.id === name)?.count === 0
                 ? dispatch({ type: "REMOVE_FROM_CART", payload: { id: name } })
                 : state.items.find((item) => item.id === name)?.count}
             </span>
             <button
-              className="p-2 border-[1px] border-teal-800 text-teal-800 hover:text-white hover:bg-teal-800"
+              className="px-2 rounded-full bg-teal-300 hover:bg-teal-500"
               onClick={() => {
                 dispatch({
                   type: "INCREMENT",

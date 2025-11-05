@@ -123,4 +123,65 @@ export const useAuthStore = create((set) => ({
       throw error;
     }
   },
+  forgotPassword: async (email) => {
+    set({ isLoading: true, error: null, message: null });
+    try {
+      const response = await fetch(API_URL + "forgot-password", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      set({ message: data.message, isLoading: false, error: null });
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error.message || "Error sending reset password email",
+      });
+      throw error;
+    }
+  },
+  resetPassword: async (token, password) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + `reset-password/${token}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      set({ message: data.message, isLoading: false });
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error.message || "Error resetting password",
+      });
+      throw error;
+    }
+  },
+
+  resendOTP: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "verify", {
+        method: "PUT",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      set({ user: data.user, isLoading: false, error: null });
+      return data.message;
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 }));

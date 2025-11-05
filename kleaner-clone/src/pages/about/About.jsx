@@ -14,7 +14,6 @@ function About() {
       <AboutPoints />
       <AboutReviews />
       <AboutDesc2 />
-      <Footer />
     </>
   );
 }

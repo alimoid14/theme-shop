@@ -3,6 +3,7 @@ import bcryptjs from "bcryptjs";
 import { generateVerificationToken } from "../utils/generateVerificationToken.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
@@ -144,6 +145,103 @@ export const verifyEmail = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "Email verified successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.resetTokenExpiresAt > Date.now())
+      return res.status(400).json({
+        message: "You have an active reset code, please check your email",
+      });
+
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+
+    user.resetToken = resetToken;
+    user.resetTokenExpiresAt = resetTokenExpiresAt;
+    await user.save();
+
+    sendEmail(
+      user.email,
+      "Reset your password",
+      `Your reset link is ${process.env.CLIENT_URL}/reset-password/${resetToken}. It expires in 1 hour.`
+    );
+
+    res.status(200).json({ message: "Reset code sent successfully" });
+  } catch (error) {
+    //console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user)
+      res.status(404).json({ message: "Invalid user or token expired" });
+
+    //update password
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiresAt = undefined;
+    await user.save();
+
+    await sendEmail(
+      user.email,
+      "Password reset successfully",
+      `Your password has been reset successfully.`
+    );
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const resendVerificationOTP = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findOne({ _id: userId });
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    if (user.isVerified)
+      return res.status(400).json({ message: "User already verified" });
+
+    if (user.verificationTokenExpiresAt > Date.now())
+      return res.status(400).json({
+        message:
+          "You have an active verification code, please check your email",
+      });
+
+    const newOtp = generateVerificationToken();
+    user.verificationToken = newOtp;
+    user.verificationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 1 day
+    await user.save();
+    sendEmail(
+      user.email,
+      "Verify your email",
+      `Your verification code is ${newOtp}. It expires in 1 day.`
+    );
+
+    res.status(200).json({ message: "OTP sent successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

@@ -11,10 +11,10 @@ function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 z-50 w-full">
-        <nav className="bg-slate-900 w-full mx-auto flex flex-row justify-between text-white py-2 pr-2 pl-6 sm:px-6">
+      <header className="bg-slate-900 text-white fixed top-0 z-50 w-full text-[20px] font-bold">
+        <nav className="max-w-[1400px] mx-auto flex flex-row justify-between py-2 pr-2 pl-6 sm:px-6">
           <button
-            className="text-xl md:hidden py-2 text-white cursor-pointer"
+            className="text-xl md:hidden py-2 cursor-pointer"
             onClick={() => {
               setMenu(!menu);
               if (profileMenu) setProfileMenu(false);
@@ -22,17 +22,23 @@ function Navbar() {
           >
             <CiMenuBurger />
           </button>
-          <Link to="/" className="py-2 sm:text-[1.25rem] sm:py-1">
-            <span className="font-bold">envato </span>market
-          </Link>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `py-1 px-4 rounded-full ${
+                isActive && "border-b-2 border-amber-500"
+              }`
+            }
+          >
+            envato market
+          </NavLink>
 
-          <div className="hidden w-[300px] sm:w-[450px] md:flex flex-row justify-around gap-6">
+          <div className="hidden w-fit md:flex flex-row justify-around gap-6">
             <NavLink
               to="/about"
               className={({ isActive }) =>
-                `py-2 sm:text-[1.25rem] sm:py-1 px-2 rounded-full ${
-                  isActive &&
-                  "bg-gray-50 font-bold text-slate-900 border-2 border-blue-400"
+                `py-2 sm:py-1 px-4 rounded-full ${
+                  isActive && "border-b-2 border-amber-500"
                 }`
               }
             >
@@ -41,9 +47,8 @@ function Navbar() {
             <NavLink
               to="/live"
               className={({ isActive }) =>
-                `py-2 sm:text-[1.25rem] sm:py-1 px-2 rounded-full ${
-                  isActive &&
-                  "bg-gray-50 font-bold text-slate-900 border-2 border-blue-400"
+                `py-2 sm:py-1 px-4 rounded-full ${
+                  isActive && "border-b-2 border-amber-500"
                 }`
               }
             >
@@ -52,13 +57,22 @@ function Navbar() {
             <NavLink
               to="/cart"
               className={({ isActive }) =>
-                `py-2 sm:text-[1.25rem] sm:py-1 px-2 rounded-full ${
-                  isActive &&
-                  "bg-gray-50 font-bold text-slate-900 border-2 border-blue-400"
+                `py-2 sm:py-1 px-4 rounded-full ${
+                  isActive && "border-b-2 border-amber-500"
                 }`
               }
             >
               Cart
+            </NavLink>
+            <NavLink
+              to="/buy"
+              className={({ isActive }) =>
+                `py-2 sm:py-1 px-4 rounded-full ${
+                  isActive && "border-b-2 border-amber-500"
+                }`
+              }
+            >
+              Themes
             </NavLink>
             {/* {isAuthenticated && (
             <div className="py-2 sm:text-[1.25rem] sm:py-1 bg-white rounded-full text-slate-900 px-4">
@@ -66,25 +80,18 @@ function Navbar() {
             </div>
           )} */}
           </div>
-          <div className="flex flex-row gap-4">
-            <button className="border border-slate-900 bg-slate-300 hover:bg-slate-800 text-slate-600 hover:text-white font-bold py-2 px-4 rounded-full hover:border-white">
-              <Link to="/buy" className="">
-                Buy
-              </Link>
-            </button>
-          </div>
         </nav>
-        <nav className="bg-slate-900 text-xl text-white w-full flex flex-row gap-8 py-3 justify-center items-center">
+        <nav className="text-[20px] text-gray-400 mx-auto max-w-[1400px] flex flex-row justify-end gap-8 py-3 px-6 items-center font-bold">
           {isAuthenticated && (
             <p>
-              Logged in as: <CgProfile className="inline text-cyan-500" />
+              Logged in as: <CgProfile className="inline" />
               {user?.name}
             </p>
           )}
           {!isAuthenticated && (
             <Link
               to="/signup"
-              className="py-2 sm:text-[1.25rem] sm:py-[0.25rem] text-cyan-500 hover:text-white hover:bg-cyan-500 rounded-full px-4"
+              className="py-2 sm:py-1 hover:text-white hover:bg-cyan-500 rounded-full px-4"
             >
               SignUp
             </Link>
@@ -92,14 +99,14 @@ function Navbar() {
           {!isAuthenticated && (
             <Link
               to="/login"
-              className="py-2 sm:text-[1.25rem] sm:py-[0.25rem] text-cyan-500 hover:text-white hover:bg-cyan-500 rounded-full px-4"
+              className="py-2 sm:py-1 hover:text-white hover:bg-cyan-500 rounded-full px-4"
             >
               Login
             </Link>
           )}
           {isAuthenticated && (
             <button
-              className="py-2 sm:text-[1.25rem] sm:py-[0.25rem] text-left hover:cursor-pointer text-red-200 hover:text-white hover:bg-red-500 rounded-full px-4"
+              className="py-2 sm:py-1 text-left hover:cursor-pointer text-red-200 hover:text-white hover:bg-red-500 rounded-full px-4"
               onClick={() => {
                 logout();
               }}
@@ -110,7 +117,7 @@ function Navbar() {
           {isAuthenticated && !user?.isVerified && (
             <Link
               to="/verify"
-              className="py-2 sm:text-[1.25rem] sm:py-[0.25rem] text-cyan-500 hover:text-white hover:bg-cyan-500 rounded-full px-4"
+              className="py-2 sm:text-[1.25rem] sm:py-1 text-cyan-500 hover:text-white hover:bg-cyan-500 rounded-full px-4"
             >
               Verify
             </Link>

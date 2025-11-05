@@ -16,6 +16,10 @@ import PaymentSuccess from "./pages/success/PaymentSuccess";
 import { Navigate } from "react-router-dom";
 import Verify from "./pages/verify/Verify";
 import { ImSpinner3 } from "react-icons/im";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
+import ResetPassword from "./pages/resetPassword/ResetPassword";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import RedirectVerifiedUsers from "./routes/RedirectVerifiedUsers";
 function App() {
   const { checkAuth, user, isCheckingAuth } = useAuthStore();
   useEffect(() => {
@@ -44,7 +48,14 @@ function App() {
             <Route path="/live" element={<LivePreview />} />
             <Route path="/buy" element={<BuyThemes />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/success" element={<PaymentSuccess />} />
+            <Route
+              path="/success"
+              element={
+                <ProtectedRoute>
+                  <PaymentSuccess />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/signup"
               element={
@@ -62,7 +73,30 @@ function App() {
               }
             />
 
-            <Route path="/verify" element={<Verify />} />
+            <Route
+              path="/verify"
+              element={
+                <RedirectVerifiedUsers>
+                  <Verify />
+                </RedirectVerifiedUsers>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <RedirectAuthenticatedUser>
+                  <ForgotPassword />
+                </RedirectAuthenticatedUser>
+              }
+            />
+            <Route
+              path="/reset-password/:token"
+              element={
+                <RedirectAuthenticatedUser>
+                  <ResetPassword />
+                </RedirectAuthenticatedUser>
+              }
+            />
 
             <Route path="/*" element={<Navigate to="/" replace />} />
           </Route>

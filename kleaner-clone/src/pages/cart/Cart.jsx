@@ -6,7 +6,6 @@ function Cart() {
   return (
     <>
       <CartMain />
-      <Footer />
     </>
   );
 }

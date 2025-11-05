@@ -22,7 +22,6 @@ function Home() {
       <HomeNewThemes />
       <HomeFeatCreator />
       <HomeBestSellers />
-      <Footer />
     </section>
   );
 }

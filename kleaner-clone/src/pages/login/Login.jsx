@@ -68,6 +68,9 @@ function Login() {
                 Signup
               </Link>
             </p>
+            <Link to="/forgot-password" className="text-cyan-600 block mx-auto">
+              Forgot password?
+            </Link>
           </form>
         </div>
       </div>
