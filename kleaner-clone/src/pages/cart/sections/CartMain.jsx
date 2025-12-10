@@ -6,7 +6,7 @@ import { useAuthStore } from "../../../store/authStore";
 import { useNavigate } from "react-router-dom";
 
 function CartMain() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated} = useAuthStore();
   const { state, totalCost, dispatch } = useCart();
   const list = state.items;
   const navigate = useNavigate();
@@ -29,7 +29,6 @@ function CartMain() {
     });
     const { key } = await keyResponse.json();
 
-    console.log(key);
     const orderResponse = await fetch(API_URL, {
       method: "POST",
       credentials: "include",
@@ -155,12 +154,12 @@ function CartMain() {
             </div>
           </div>
 
-          {isAuthenticated && user.isVerified && (
+          {isAuthenticated && (
             <div className="max-w-[1400px] px-4 lg:px-6 mx-auto my-12">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded block ml-auto"
                 onClick={() => handleSubmit(totalCost)}
-                disabled={!isAuthenticated || !user.isVerified}
+                disabled={!isAuthenticated}
               >
                 Checkout
               </button>
@@ -174,13 +173,13 @@ function CartMain() {
               </p>
             </div>
           )}
-          {isAuthenticated && !user.isVerified && (
+          {/* {isAuthenticated && !user.isVerified && (
             <div className="w-fit max-w-[1400px] my-12 mx-4 md:mx-auto md:self-end">
               <p className="text-gray-400 font-bold text-xl">
                 Please verify your email to checkout
               </p>
             </div>
-          )}
+          )} */}
         </>
       ) : (
         <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold h-[50vh] flex justify-center items-center">
