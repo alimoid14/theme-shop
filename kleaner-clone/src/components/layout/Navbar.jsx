@@ -84,7 +84,7 @@ function Navbar() {
         <nav className="text-[20px] text-gray-400 mx-auto max-w-[1400px] flex flex-row justify-end gap-8 py-3 px-6 items-center font-bold">
           {isAuthenticated && (
             <p>
-              Logged in as: <CgProfile className="inline" />
+              <CgProfile className="inline" />
               {user?.name}
             </p>
           )}
