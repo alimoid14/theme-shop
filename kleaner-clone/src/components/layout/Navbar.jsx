@@ -134,8 +134,14 @@ function Navbar() {
           setMenu(!menu);
         }}
       >
+        <Link to="/" className="py-2 sm:text-[1.25rem] sm:py-1">
+          Home
+        </Link>
         <Link to="/about" className="py-2 sm:text-[1.25rem] sm:py-1">
           About
+        </Link>
+        <Link to="/buy" className="py-2 sm:text-[1.25rem] sm:py-1">
+          Themes
         </Link>
         <Link to="/live" className="py-2 sm:text-[1.25rem] sm:py-1">
           Template Demo
