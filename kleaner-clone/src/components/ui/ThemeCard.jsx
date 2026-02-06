@@ -1,6 +1,6 @@
-import React from "react";
-import { useCart } from "../../context/useContext";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../../context/useContext";
 
 function ThemeCard({
   name,
@@ -13,159 +13,152 @@ function ThemeCard({
   variant,
 }) {
   const { state, dispatch } = useCart();
+
+  /* -------------------- DERIVED STATE -------------------- */
+  const cartItem = state.items.find((item) => item.id === name);
+  const isInCart = Boolean(cartItem);
+  const quantity = cartItem?.count ?? 0;
+
+  const isTheme = variant === "theme";
+  const isFeatured = variant === "theme-ft";
+  const isCart = variant === "theme-cart";
+  const isDescHidden = variant === "theme-desc";
+
+  /* -------------------- SAFE CLEANUP -------------------- */
+  useEffect(() => {
+    if (isCart && isInCart && quantity === 0) {
+      dispatch({ type: "REMOVE_FROM_CART", payload: { id: name } });
+    }
+  }, [quantity, isCart, isInCart, dispatch, name]);
+
+  /* -------------------- ACTIONS -------------------- */
+  const addToCart = () =>
+    dispatch({
+      type: "ADD_TO_CART",
+      payload: { id: name, name, price, count: 1 },
+    });
+
+  const increment = () =>
+    dispatch({ type: "INCREMENT", payload: { id: name, price } });
+
+  const decrement = () =>
+    dispatch({ type: "DECREMENT", payload: { id: name, price } });
+
+  /* -------------------- SUB COMPONENTS -------------------- */
+
+  const ThemeImage = () => (
+    <img
+      src={image}
+      alt={name}
+      className={`mr-auto block ${isCart ? "w-[20%] h-fit py-4" : "w-full"}`}
+    />
+  );
+
+  const ThemeMeta = () => (
+    <>
+      <div className="font-bold hover:underline">
+        <p className="truncate">{name}</p>
+      </div>
+
+      <p className="text-[0.75rem] text-gray-400">
+        by <span className="font-bold hover:underline">{author}</span>
+        {(isFeatured || isCart) && (
+          <>
+            {" "}
+            in <span className="font-bold">{category}</span>
+          </>
+        )}
+      </p>
+    </>
+  );
+
+  const CartCTA = () => {
+    if (isTheme || isCart) return null;
+
+    return isInCart ? (
+      <Link
+        to="/cart"
+        className="h-fit self-end p-2 border border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white"
+      >
+        View Cart
+      </Link>
+    ) : (
+      <button
+        onClick={addToCart}
+        className="h-fit self-end p-2 border border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white"
+      >
+        Add to Cart
+      </button>
+    );
+  };
+
+  const QuantityControls = () =>
+    isCart && (
+      <div className="flex gap-2 items-center font-bold text-[0.75rem]">
+        <button
+          className="px-2 rounded-full bg-red-300 hover:bg-red-500"
+          onClick={decrement}
+        >
+          -
+        </button>
+
+        <span className="text-[1rem]">Qty: {quantity}</span>
+
+        <button
+          className="px-2 rounded-full bg-teal-300 hover:bg-teal-500"
+          onClick={increment}
+        >
+          +
+        </button>
+      </div>
+    );
+
+  /* -------------------- RENDER -------------------- */
+
   return (
     <div
-      className={`group rounded relative group w-full overflow-hidden hover:-translate-y-2 transition-all duration-500 ${
-        variant === "theme-cart" ? "flex flex-row justify-between" : ""
+      className={`group rounded relative w-full overflow-hidden hover:-translate-y-2 transition-all duration-500 ${
+        isCart ? "flex flex-row justify-between" : ""
       }`}
     >
-      {/* ------------------IMAGE----------------------- */}
+      <ThemeImage />
 
-      <img
-        src={image}
-        className={`mr-auto block ${
-          variant === "theme-cart" ? "w-[20%] h-fit py-4" : "w-full"
-        }`}
-      />
-
-      {/* -------------------DETAILS-PARENT-CONTAINER-------------- */}
-
-      <div
-        className={`bg-gray-50 p-4 transition-all duration-500 ${
-          variant === "theme"
-            ? "lg:py-4 lg:absolute lg:inset-x-0 lg:bottom-0 lg:opacity-0 lg:group-hover:opacity-100"
-            : ""
-        } ${variant === "theme-desc" ? "hidden" : ""}
-        ${variant === "theme-cart" ? "flex flex-col w-[75%]" : ""}`}
-      >
-        {/* ---------------------THEME-NAME------------------- */}
-
-        <div className="font-bold hover:underline">
-          <p className="truncate">{name}</p>
-        </div>
-
-        {/* ---------------------AUTHOR-DETAILS-------------- */}
-
-        <p className="w-full text-[0.75rem] text-gray-400">
-          by <span className="font-bold hover:underline">{author}</span>{" "}
-          <span
-            className={`${
-              variant === "theme-ft" || variant === "theme-cart"
-                ? "inline"
-                : "hidden"
-            }`}
-          >
-            in <span className="font-bold">{category}</span>
-          </span>
-        </p>
-
-        {/* -----------------DETAILS-CONTAINER---------------- */}
+      {!isDescHidden && (
         <div
-          className={`flex-1 ${
-            variant === "theme-ft" || variant === "theme-cart"
-              ? "flex flex-row justify-between"
+          className={`bg-gray-50 p-4 transition-all duration-500 ${
+            isTheme
+              ? "lg:absolute lg:inset-x-0 lg:bottom-0 lg:opacity-0 lg:group-hover:opacity-100"
               : ""
-          }`}
+          } ${isCart ? "flex flex-col w-[75%]" : ""}`}
         >
+          <ThemeMeta />
+
           <div
-            className={`text-[0.75rem] text-gray-400 ${
-              variant === "theme" ? "flex flex-row justify-between" : ""
+            className={`flex-1 ${
+              isFeatured || isCart ? "flex justify-between" : ""
             }`}
           >
-            {/* -----------------PRICE-AND-DETAILS------ */}
-
-            {/* -----------------PRICE------------------ */}
-
-            <p
-              className={`${
-                variant === "theme-ft" || variant === "theme-cart"
-                  ? "inline-block text-[1.25rem] text-black font-bold mt-4"
-                  : "hidden"
+            <div
+              className={`text-[0.75rem] text-gray-400 ${
+                isTheme ? "flex justify-between" : ""
               }`}
-            >{`$${price}`}</p>
-
-            {/* -----------------REVIEWS----------- */}
-
-            <p>{`(${reviews})`}</p>
-
-            {/* -----------------SALES-------------- */}
-            <p
-              className={`${
-                variant === "theme-ft" ? "inline-block" : "hidden"
-              }`}
-            >{`${sales}`}</p>
-          </div>
-          <div
-            className={`${
-              variant === "theme" || variant === "theme-cart" ? "hidden" : ""
-            } ${
-              variant === "theme-ft"
-                ? "w-fit text-right h-fit self-end font-bold text-[0.75rem]"
-                : ""
-            }`}
-          >
-            {state.items.find((item) => item.id === name) ? (
-              <button className="p-2 mr-[2px] border-[1px] border-gray-500 text-gray-500 hover:text-white hover:bg-gray-500">
-                <Link to="/cart">View Cart</Link>
-              </button>
-            ) : (
-              <button
-                className="p-2 mr-[2px] border-[1px] border-gray-500 text-gray-500 hover:text-white hover:bg-gray-500"
-                onClick={() => {
-                  dispatch({
-                    type: "ADD_TO_CART",
-                    payload: { id: name, name: name, price: price, count: 1 },
-                  });
-                  console.log("Added to cart");
-                }}
-              >
-                Add to Cart
-              </button>
-            )}
-            {/* <button className="p-2 ml-[2px] border-[1px] border-teal-800 text-teal-800 hover:text-white hover:bg-teal-800">
-              Live Preview
-            </button> */}
-          </div>
-          <div
-            className={`${
-              variant === "theme-cart"
-                ? "w-fit text-right h-fit self-end font-bold text-[0.75rem] flex gap-2"
-                : "hidden"
-            }`}
-          >
-            <button
-              className="px-2 rounded-full bg-red-300 hover:bg-red-500"
-              onClick={() => {
-                dispatch({
-                  type: "DECREMENT",
-                  payload: { id: name, price: price },
-                });
-                console.log("Removed from cart");
-              }}
             >
-              -
-            </button>
-            <span className="text-[1rem]">
-              Qty:
-              {state.items.find((item) => item.id === name)?.count === 0
-                ? dispatch({ type: "REMOVE_FROM_CART", payload: { id: name } })
-                : state.items.find((item) => item.id === name)?.count}
-            </span>
-            <button
-              className="px-2 rounded-full bg-teal-300 hover:bg-teal-500"
-              onClick={() => {
-                dispatch({
-                  type: "INCREMENT",
-                  payload: { id: name, price: price },
-                });
-                console.log("Added to cart");
-              }}
-            >
-              +
-            </button>
+              {(isFeatured || isCart) && (
+                <p className="text-[1.25rem] text-black font-bold mt-4">
+                  ${price}
+                </p>
+              )}
+
+              <p>({reviews})</p>
+
+              {isFeatured && <p>{sales}</p>}
+            </div>
+
+            <CartCTA />
+            <QuantityControls />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
